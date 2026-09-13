@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: discord-stream-selfbot
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: bun install && bun run build
+    startCommand: bun run start
+    envVars:
+      - key: NODE_ENV
+        value: production
