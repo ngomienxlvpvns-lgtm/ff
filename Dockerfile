@@ -4,8 +4,14 @@ FROM node:trixie
 # Set the working directory
 WORKDIR /home/bots/StreamBot
 
-# Install minimal dependencies
-RUN apt-get update && apt-get install -y curl ca-certificates unzip && \
+# Install minimal dependencies, build tools, python3, and ffmpeg
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    unzip \
+    build-essential \
+    python3 \
+    ffmpeg && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -13,16 +19,8 @@ RUN apt-get update && apt-get install -y curl ca-certificates unzip && \
 ENV BUN_INSTALL="/usr/local/"
 RUN curl -fsSL https://bun.sh/install | bash
 
-# Install remaining dependencies and clean cache
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3 \
-    ffmpeg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copy package.json
-COPY package.json ./
+# Copy package.json and lock file
+COPY package.json bun.lock* package-lock.json* ./
 
 # Install dependencies
 RUN bun install
